@@ -1,4 +1,4 @@
-//Функция для проверки длины строки.
+/*Функция для проверки длины строки.
 const checkLength = (string, validLength) => string.length <= validLength;
 checkLength('проверяемая строка', 20);
 
@@ -6,7 +6,7 @@ const checkLengthS = (string, validLength) => string.length === validLength;
 checkLengthS('проверяемая строка', 18);
 
 const checkLengthD = (string, validLength) => string.length <= validLength;
-checkLengthD('проверяемая строка', 10);
+checkLengthD('проверяемая строка', 10);*/
 
 //Функция для проверки, является ли строка палиндромом.
 palindrome('racecar');
@@ -41,6 +41,7 @@ extractNumber('2023 год');
 
 //Функция, которая принимает три параметра: исходную строку, минимальную длину и строку с добавочными символами — и возвращает исходную строку, дополненную указанными символами до заданной длины.
 const myPadStart = (string, minLength, pad) => {
+  debugger
   const actualPad = minLength - string.length;
 
   if (actualPad <= 0) {
@@ -54,3 +55,16 @@ myPadStart('q', 4, 'we');
 myPadStart('1', 4, '0');
 myPadStart('q', 4, 'werty');
 myPadStart('qwerty', 4, '0');
+
+//Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно.
+let getRandomPositiveFloat = function(a, b, digits = 1) {
+  if (a < 0 || b < 0) return NaN;
+
+  const lower = Math.min(a,b);
+  const upper = Math.max(a,b);
+  const result = Math.random() * (upper - lower) + lower;
+  return result.toFixed(digits);
+}
+for (let i = 0; i < 10; i++){
+  console.log(getRandomPositiveFloat(1,3))
+}
