@@ -29,7 +29,7 @@ const DESCRIPTION_SET = [
 ];
 
 const PHOTOS = [
- 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
@@ -54,8 +54,7 @@ const getRandomIntNumber = (a, b) => {
 const getRandomFloatNumber = (min, max, amount) => {
   if (min >= max) {
     throw Error(`Первое число диапазона должно быть меньше второго.\nВы ввели ${min} и ${max}`);
-  }
-  else if (min < 0) {
+  } else if (min < 0) {
     throw Error(`Первое число диапазона не может быть меньше нуля.\nВы ввели ${min} и ${max}`);
   } else {
     const num = (Math.random() * (max - min) + min);
@@ -70,20 +69,20 @@ const getRandomValue = (value) => {
 
 const similarAd = () => ({
   author: {
- avatar: `img/avatars/user0${getRandomIntNumber(1, 9 )}.png`,
+    avatar: `img/avatars/user0${getRandomIntNumber(1, 9)}.png`,
   },
   offer: {
     title: getRandomValue(TITLES),
-address: `${getRandomFloatNumber(35.65000, 35.70000, 5)}, ${getRandomFloatNumber(139.70000, 139.80000, 5)}`,
+    address: `${getRandomFloatNumber(35.65000, 35.70000, 5)}, ${getRandomFloatNumber(139.70000, 139.80000, 5)}`,
     price: getRandomIntNumber(10, 100),
     type: getRandomValue(TYPES),
     rooms: getRandomIntNumber(1, 6),
     guests: getRandomIntNumber(1, 10),
     checkin: getRandomValue(TIMES),
     checkout: getRandomValue(TIMES),
-features: FEATURES.slice(0, getRandomIntNumber(1, 5)),
+    features: FEATURES.slice(0, getRandomIntNumber(1, 5)),
     description: getRandomValue(DESCRIPTION_SET),
- photos: PHOTOS.slice(0, getRandomIntNumber(1, 3)),
+    photos: PHOTOS.slice(0, getRandomIntNumber(1, 3)),
   },
   location: {
     lat: getRandomFloatNumber(35.65000, 35.70000, 5),
