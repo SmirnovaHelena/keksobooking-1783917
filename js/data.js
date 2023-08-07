@@ -111,6 +111,4 @@ const similarAd = () => {
 
 const similarAds = () => Array.from({ length: ADS_OFFER_NUMBER }, similarAd);
 
-similarAds();
-
 export {similarAds};
