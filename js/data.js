@@ -64,7 +64,7 @@ const MAX_GUESTS = 10;
 
 const userIds = [];
 
-function buildLocation() {
+export function buildLocation() {
   return {
     lat: getRandomFloatNumber(LAT_MIN, LAT_MAX, PRECISION),
     lng: getRandomFloatNumber(LNG_MIN, LNG_MAX, PRECISION),
@@ -88,7 +88,7 @@ function createUser() {
   };
 }
 
-const similarAd = () => {
+export const getSimilarAd = () => {
   const location = buildLocation();
   return {
     author: createUser(),
@@ -109,6 +109,6 @@ const similarAd = () => {
   };
 };
 
-const similarAds = () => Array.from({ length: ADS_OFFER_NUMBER }, similarAd);
+const getSimilarAds = () => Array.from({ length: ADS_OFFER_NUMBER }, getSimilarAd);
 
-export {similarAds};
+export {getSimilarAds};
