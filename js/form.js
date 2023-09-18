@@ -2,7 +2,7 @@ const addForm = document.querySelector('.ad-form');
 
 const mapFilters = document.querySelector('.map__filters');
 
-const toggleElementsState = (elements, state) => {
+const toggleElementsDisabled = (elements, state) => {
   for (const element of elements) {
     element.disabled = state;
   }
@@ -12,17 +12,17 @@ const formDisabled = () => {
   addForm.classList.add('ad-form--disabled');
   mapFilters.classList.add('ad-form--disabled');
 
-  toggleElementsState(addForm.children, true);
-  toggleElementsState(mapFilters.children, true);
+  toggleElementsDisabled(addForm.children, true);
+  toggleElementsDisabled(mapFilters.children, true);
 };
 
-const formAdle = () => {
+const formEnabled = () => {
   addForm.classList.remove('ad-form--disabled');
   mapFilters.classList.remove('ad-form--disabled');
 
-  toggleElementsState(addForm.children, false);
-  toggleElementsState(mapFilters.children, false);
+  toggleElementsDisabled(addForm.children, false);
+  toggleElementsDisabled(mapFilters.children, false);
 };
 
-export {formDisabled, formAdle};
+export {formDisabled, formEnabled};
 
