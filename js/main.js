@@ -3,7 +3,8 @@ import './util.js';
 import { getSimilarAd, getSimilarAds } from './data.js';
 import {createPopup} from './popup.js';
 // eslint-disable-next-line no-unused-vars
-import {formDisabled, formEnabled} from './form.js';
+import {formDisabled, formEnabled} from './form_validation.js';
+import './user_form.js';
 
 /* eslint-disable no-console */
 
