@@ -38,4 +38,8 @@ export const printNumerals = (number, titles) => {
   return `${titles[1]}`;
 };
 
-export {getRandomFloatNumber, getRandomIntNumber, getRandomValue};
+// export {getRandomFloatNumber, getRandomIntNumber, getRandomValue};
+const escapeKey = (evt) => evt.key === 'Escape';
+const enterKey = (evt) => evt.key === 'Enter';
+
+export {getRandomFloatNumber, getRandomIntNumber, getRandomValue, escapeKey, enterKey};
