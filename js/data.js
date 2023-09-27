@@ -53,8 +53,8 @@ const LNG_MAX = 139.80000;
 
 const PRECISION = 5;
 
-const MIN_PRICE = 10;
-const MAX_PRICE = 100;
+const MIN_PRICE = 5000;
+const MAX_PRICE = 100000;
 
 const MIN_ROOMS = 1;
 const MAX_ROOMS = 6;
