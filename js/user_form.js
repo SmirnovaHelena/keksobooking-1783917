@@ -1,5 +1,7 @@
 import { makeRequest } from './api.js';
 import { getSuccessfulDownloorderForm, getFailedDownloorderForm } from './message.js';
+import { sliderReset } from './slider.js';
+import { resetImages } from './avatar.js';
 
 const orderForm = document.querySelector('.ad-form');
 const capacityElement = orderForm.querySelector('#capacity');
@@ -52,7 +54,7 @@ pristine.addValidator(
 );
 
 function validatePrice (value) {
-  return value.length > 100000;
+  return value.length < 100000;
 }
 
 pristine.addValidator(
@@ -100,12 +102,30 @@ capacityElement.addEventListener('change', onGuestsNumberChange);
 const onTimeInChange = () => {
   timeOut.value = timeIn.value;
 };
+// eslint-disable-next-line no-unused-vars
 const onTimeOutChange = () => {
   timeIn.value = timeOut.value;
 };
 
 timeIn.addEventListener('change', onTimeInChange);
-timeOut.addEventListener('change', onTimeOutChange);
+
+const formChangeStatus = (form) => {
+  form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
+    fieldItem.disabled = !fieldItem.disabled;
+  });
+};
+
+const formStatus = () => {
+  orderForm.classList.toggle('ad-form--disabled');
+
+  formChangeStatus(orderForm);
+};
+
+const inactiveMapFilters = () => {
+  mapFilters.classList.toggle('ad-form--disabled');
+
+  formChangeStatus(mapFilters);
+};
 
 const priceCheck = (value) => Number.parseInt(value, 10) >= ROOM_TYPE_PRICE[typeOfHousing.value];
 
@@ -139,6 +159,7 @@ const onResetClick = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     resettingForm();
+    resetImages();
   });
 };
 
@@ -159,29 +180,13 @@ const onUserFormSubmit = (oneAction, twoAction) => {
     if (isValid) {
       const formData = new FormData(evt.target);
       blockSubmitButton();
+      sliderReset();
       /*eslint brace-style: ["error", "1tbs", { "allowSingleLine": true }]*/
       makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloorderForm(); unblockSubmitButton(); }, () => {
         getFailedDownloorderForm(); unblockSubmitButton();
       }, 'POST', formData);
     }
   });
-};
-
-const formChangeStatus = (form) => {
-  form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
-    fieldItem.disabled = !fieldItem.disabled;
-  });
-};
-
-const formStatus = () => {
-  orderForm.classList.toggle('ad-form--disabled');
-
-  formChangeStatus(orderForm);
-};
-
-const inactiveMapFilters = () => {
-  mapFilters.classList.toggle('ad-form--disabled');
-  formChangeStatus(mapFilters);
 };
 
 export {formStatus, inactiveMapFilters, onUserFormSubmit, resettingForm, onResetClick};
