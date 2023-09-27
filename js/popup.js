@@ -1,5 +1,4 @@
 /* eslint-disable no-shadow */
-// import { getSimilarAds } from './data.js';
 import { printNumerals } from './util.js';
 
 const templateFragment = document.querySelector('#card').content;

@@ -7,14 +7,10 @@ const START_COORDINATE = {
   startLng: 139.753143
 };
 
-
 const DEFAULT_ZOOM = 10;
 
 const map = L.map('map-canvas')
   .setView({
-  //   lat: 35.683171,
-  //   lng: 139.753143,
-  // }, 10);
     lat: START_COORDINATE.startLat,
     lng: START_COORDINATE.startLng
   }, DEFAULT_ZOOM);
@@ -34,8 +30,6 @@ const mainPinIcon = L.icon({
 
 const mainPinMarker = L.marker(
   {
-    // lat: 35.67325,
-    // lng: 139.75908,
     lat: START_COORDINATE.startLat,
     lng: START_COORDINATE.startLng,
   },
@@ -46,10 +40,6 @@ const mainPinMarker = L.marker(
 );
 
 mainPinMarker.addTo(map);
-
-// mainPinMarker.on('moveend', (evt) => {
-//   evt.target.getLatLng();
-// });
 
 const icon = L.icon({
   iconUrl: './img/pin.svg',
@@ -88,8 +78,6 @@ const setOfferPinMarker = (offers) => {
 
 const setOnMapLoad = (cb) => map.on('load', cb);
 
-// const mapInit = () => {
-//   map();
 const mapInit = (offersData) => {
   setStartAddress();
   setOfferPinMarker(offersData);
@@ -108,6 +96,5 @@ const resetMap = () => {
     lng: START_COORDINATE.startLng
   });
 };
-
 
 export { mapInit, setStartAddress, setOnMapLoad, setMainPinMarker, setOfferPinMarker, resetMap };
