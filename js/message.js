@@ -13,7 +13,9 @@ const onSuccessMessageEscKeydown = (evt) => {
 };
 
 const onSuccessMessageClick = () => {
-  body.removeChild(body.querySelector('.success'));
+  body.querySelector('.success').remove();
+  document.removeEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
+  document.removeEventListener('click', onSuccessMessageClick, { once: true });
 };
 
 const closeOpenSuccessMessage = () => {

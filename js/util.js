@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const ALERT_TIME = 5000;
 // Возвращает случайное рандомное целое число в заданном диапазоне, которое будет являться индексом в масиве
 const getRandomIntNumber = (a, b) => {
@@ -42,25 +43,35 @@ const escapeKey = (evt) => evt.key === 'Escape';
 const enterKey = (evt) => evt.key === 'Enter';
 
 // export {getRandomFloatNumber, getRandomIntNumber, getRandomValue, escapeKey, enterKey};
-const alertMessage = (message) => {
-  const alertContainer = document.createElement('div');
-  alertContainer.style.zIndex = '100';
-  alertContainer.style.position = 'absolute';
-  alertContainer.style.left = '0';
-  alertContainer.style.top = '0';
-  alertContainer.style.right = '0';
-  alertContainer.style.padding = '10px 3px';
-  alertContainer.style.fontSize = '30px';
-  alertContainer.style.textAlign = 'center';
-  alertContainer.style.backgroundColor = 'red';
+const setAlertMessage = (status = 'error') => {
+  const templateAlertMessage = document.querySelector(`#${status}`).content.querySelector(`.${status}`).cloneNode(true);
+  // const alertMessageText = templateAlertMessage.querySelector(`.${status}__message`);
+  const alertButton = templateAlertMessage.querySelector('.error__button');
+  // alertMessageText.textContent = message;
 
-  alertContainer.textContent = message;
+  if(alertButton) {
+    alertButton.addEventListener('click', () => {
+      templateAlertMessage.remove();
+    });
+  }
+  document.body.append(templateAlertMessage);
 
-  document.body.append(alertContainer);
+  // const alertContainer = document.createElement('div');
+  // alertContainer.style.zIndex = '100';
+  // alertContainer.style.position = 'absolute';
+  // alertContainer.style.left = '0';
+  // alertContainer.style.top = '0';
+  // alertContainer.style.right = '0';
+  // alertContainer.style.padding = '10px 3px';
+  // alertContainer.style.fontSize = '30px';
+  // alertContainer.style.textAlign = 'center';
+  // alertContainer.style.backgroundColor = 'red';
 
-  setTimeout(() => {
-    alertContainer.remove();
-  }, ALERT_TIME);
+  // alertContainer.textContent = message;
+
+  // setTimeout(() => {
+  //   templateAlertMessage.remove();
+  // }, ALERT_TIME);
 };
 
 const debounce = (callback, timeoutDelay = 500) => {
@@ -72,4 +83,4 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-export {getRandomFloatNumber, getRandomIntNumber, escapeKey, enterKey, debounce, alertMessage};
+export {getRandomFloatNumber, getRandomIntNumber, escapeKey, enterKey, debounce, setAlertMessage};

@@ -31,14 +31,14 @@ sliderElement.noUiSlider.on('update', () => {
   valueElement.dispatchEvent(evt);
 });
 
-const sliderReset = () => {
+const resetSlider = () => {
   sliderElement.noUiSlider.reset();
 };
 
 resetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
 
-  sliderReset();
+  resetSlider();
 });
 
-export {sliderReset};
+export {resetSlider};
