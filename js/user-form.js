@@ -149,7 +149,7 @@ const ontypeOfHousingChange = () => {
 typeOfHousing.addEventListener('change', ontypeOfHousingChange);
 
 const resettingForm = () => {
-  // orderForm.reset();
+  orderForm.reset();
   mapFilters.reset();
   price.placeholder = 0;
   pristine.reset();
@@ -182,9 +182,17 @@ const onUserFormSubmit = (oneAction, twoAction) => {
       blockSubmitButton();
       resetSlider();
       /*eslint brace-style: ["error", "1tbs", { "allowSingleLine": true }]*/
-      makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloorderForm(); unblockSubmitButton(); }, () => {
-        getFailedDownloorderForm(); unblockSubmitButton();
-      }, 'POST', formData);
+      makeRequest(() => {
+        oneAction();
+        getSuccessfulDownloorderForm();
+        unblockSubmitButton();
+      }, () => {
+        twoAction();
+        getFailedDownloorderForm();
+        unblockSubmitButton();
+      },
+      'POST',
+      formData);
     }
   });
 };
