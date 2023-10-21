@@ -2,7 +2,7 @@ const MAX_ELEMENT = 10;
 const DEFAULT_VALUE = 'any';
 
 const priceHouse = {
-  'low': {
+  low: {
     start: 0,
     end: 10000,
   },

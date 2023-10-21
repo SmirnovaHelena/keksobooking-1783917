@@ -39,15 +39,13 @@ export const printNumerals = (number, titles) => {
   return `${titles[1]}`;
 };
 
-const escapeKey = (evt) => evt.key === 'Escape';
-const enterKey = (evt) => evt.key === 'Enter';
+const isEscapeKey = (evt) => evt.key === 'Escape';
+const isEnterKey = (evt) => evt.key === 'Enter';
 
-// export {getRandomFloatNumber, getRandomIntNumber, getRandomValue, escapeKey, enterKey};
+
 const setAlertMessage = (status = 'error') => {
   const templateAlertMessage = document.querySelector(`#${status}`).content.querySelector(`.${status}`).cloneNode(true);
-  // const alertMessageText = templateAlertMessage.querySelector(`.${status}__message`);
   const alertButton = templateAlertMessage.querySelector('.error__button');
-  // alertMessageText.textContent = message;
 
   if(alertButton) {
     alertButton.addEventListener('click', () => {
@@ -66,4 +64,4 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-export {getRandomFloatNumber, getRandomIntNumber, escapeKey, enterKey, debounce, setAlertMessage};
+export {getRandomFloatNumber, getRandomIntNumber, isEscapeKey, isEnterKey, debounce, setAlertMessage};

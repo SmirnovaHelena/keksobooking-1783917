@@ -159,7 +159,6 @@
   // Issue #785
   function getSupportsPassive() {
       var supportsPassive = false;
-      /* eslint-disable */
       try {
           var opts = Object.defineProperty({}, "passive", {
               get: function () {
@@ -170,7 +169,6 @@
           window.addEventListener("test", null, opts);
       }
       catch (e) { }
-      /* eslint-enable */
       return supportsPassive;
   }
   function getSupportsTouchActionNone() {

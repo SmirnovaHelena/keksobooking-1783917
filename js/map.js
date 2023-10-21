@@ -1,19 +1,15 @@
 import {createPopup} from './popup.js';
 
 import {filterData} from './sorting.js';
-import {formStatus, inactiveMapFilters} from './user-form.js';
+import {getFormStatus, getInactiveMapFilters} from './user-form.js';
 import {makeRequest} from './api.js';
 import {setAlertMessage, debounce} from './util.js';
 
 const addressElement = document.querySelector('#address');
 
-// const START_COORDINATE = {
-//   startLat: 35.683171,
-//   startLng: 139.753143
-// };
 const resetButton = document.querySelector('.ad-form__reset');
 const mapFilters = document.querySelector('.map__filters');
-// eslint-disable-next-line no-unused-vars
+
 const ALLERT_MESSAGE = 'Не удалось загрузить данные, повторите попытку.';
 const MAX_ELEMENT = 10;
 let options = [];
@@ -26,11 +22,8 @@ const COORDINATE = {
 const DEFAULT_ZOOM = 10;
 
 const map = L.map('map-canvas')
-  // .setView({
-  //   lat: START_COORDINATE.startLat,
-  //   lng: START_COORDINATE.startLng
   .on('load', () => {
-    formStatus();
+    getFormStatus();
     makeRequest(onSuccess, onError, 'GET');
   }).setView({
     lat: COORDINATE.lat,
@@ -54,8 +47,6 @@ const mainPinIcon = L.icon({
 
 const mainPinMarker = L.marker(
   {
-    // lat: START_COORDINATE.startLat,
-    // lng: START_COORDINATE.startLng,
     lat: COORDINATE.lat,
     lng: COORDINATE.lng,
   },
@@ -87,7 +78,6 @@ const setAddressOnPinMove = () => {
   });
 };
 
-// const setOfferPinMarker = (offers) => {
 const setOfferPinMarker = (offers, cb) => {
   offers.forEach((offer) => {
     const offerMarker = L.marker(
@@ -99,40 +89,31 @@ const setOfferPinMarker = (offers, cb) => {
         icon,
       }
     );
-    // offerMarker.addTo(map).bindPopup(createPopup(offer));
+
     offerMarker.addTo(pointLayer).bindPopup(cb(offer));
   });
 };
 
 const setOnMapLoad = (cb) => map.on('load', cb);
 
-// const initMap = (offersData) => {
 const initMap = () => {
   setStartAddress();
-  // setOfferPinMarker(offersData);
   setMainPinMarker();
   setAddressOnPinMove();
 };
 
-// const resetMap = () => {
 function resetMap () {
   map.closePopup();
   map.setView({
-    // lat: START_COORDINATE.startLat,
-    // lng: START_COORDINATE.startLng
     lat: COORDINATE.lat,
     lng: COORDINATE.lng
   }, DEFAULT_ZOOM);
   mainPinMarker.setLatLng({
-    // lat: START_COORDINATE.startLat,
-    // lng: START_COORDINATE.startLng
     lat: COORDINATE.lat,
     lng: COORDINATE.lng
   });
-  // };
-  removePoints();
 
-  // export { initMap, setStartAddress, setOnMapLoad, setMainPinMarker, setOfferPinMarker, resetMap };
+  removePoints();
 
   setOfferPinMarker(options.slice(0, MAX_ELEMENT), createPopup);
 }
@@ -150,16 +131,18 @@ function onMapFilterChange () {
 function onSuccess (data) {
   options = data.slice();
   // setAlertMessage('success');
-  inactiveMapFilters();
+  getInactiveMapFilters();
   setOfferPinMarker(options.slice(0, MAX_ELEMENT), createPopup);
 
   mapFilters.addEventListener('change', debounce(onMapFilterChange));
 }
-// eslint-disable-next-line no-unused-vars
-function onError (dataError) {
-  // console.log(dataError);
-  // inactiveMapFilters();
-  setAlertMessage('error');
+
+// function onError (dataError) {
+//   setAlertMessage('error');
+// }
+
+function onError () {
+  setAlertMessage(ALLERT_MESSAGE);
 }
 
 resetButton.addEventListener('click', () => {

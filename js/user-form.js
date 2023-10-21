@@ -1,5 +1,5 @@
 import { makeRequest } from './api.js';
-import { getSuccessfulDownloorderForm, getFailedDownloorderForm } from './message.js';
+import { getSuccessfulDownloaderForm, getFailedDownloaderForm } from './message.js';
 import { resetSlider } from './slider.js';
 import { resetImages } from './avatar.js';
 
@@ -102,12 +102,13 @@ capacityElement.addEventListener('change', onGuestsNumberChange);
 const onTimeInChange = () => {
   timeOut.value = timeIn.value;
 };
-// eslint-disable-next-line no-unused-vars
+
 const onTimeOutChange = () => {
   timeIn.value = timeOut.value;
 };
 
 timeIn.addEventListener('change', onTimeInChange);
+timeOut.addEventListener('change', onTimeOutChange);
 
 const formChangeStatus = (form) => {
   form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
@@ -115,19 +116,19 @@ const formChangeStatus = (form) => {
   });
 };
 
-const formStatus = () => {
+const getFormStatus = () => {
   orderForm.classList.toggle('ad-form--disabled');
 
   formChangeStatus(orderForm);
 };
 
-const inactiveMapFilters = () => {
+const getInactiveMapFilters = () => {
   mapFilters.classList.toggle('ad-form--disabled');
 
   formChangeStatus(mapFilters);
 };
 
-const priceCheck = (value) => Number.parseInt(value, 10) >= ROOM_TYPE_PRICE[typeOfHousing.value];
+const priceCheck = (value) => Number.parseInt(value, 10) >= ROOM_TYPE_PRICE[typeOfHousing.value];orderForm.reset();
 
 const getPriceErrorMessage = () => `Стоимость должна быть выше ${ROOM_TYPE_PRICE[typeOfHousing.value]}`;
 
@@ -142,11 +143,11 @@ const onPriceCheck = () => pristine.validate(price);
 price.addEventListener('change', onPriceCheck);
 typeOfHousing.addEventListener('change', onPriceCheck);
 
-const ontypeOfHousingChange = () => {
+const onTypeOfHousingChange = () => {
   price.placeholder = ROOM_TYPE_PRICE[typeOfHousing.value];
 };
 
-typeOfHousing.addEventListener('change', ontypeOfHousingChange);
+typeOfHousing.addEventListener('change', onTypeOfHousingChange);
 
 const resettingForm = () => {
   orderForm.reset();
@@ -181,14 +182,13 @@ const onUserFormSubmit = (oneAction, twoAction) => {
       const formData = new FormData(evt.target);
       blockSubmitButton();
       resetSlider();
-      /*eslint brace-style: ["error", "1tbs", { "allowSingleLine": true }]*/
       makeRequest(() => {
         oneAction();
-        getSuccessfulDownloorderForm();
+        getSuccessfulDownloaderForm();
         unblockSubmitButton();
       }, () => {
         twoAction();
-        getFailedDownloorderForm();
+        getFailedDownloaderForm();
         unblockSubmitButton();
       },
       'POST',
@@ -197,4 +197,4 @@ const onUserFormSubmit = (oneAction, twoAction) => {
   });
 };
 
-export {formStatus, inactiveMapFilters, onUserFormSubmit, resettingForm, onResetClick};
+export {getFormStatus, getInactiveMapFilters, onUserFormSubmit, resettingForm, onResetClick};
