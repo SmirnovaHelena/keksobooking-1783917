@@ -137,10 +137,6 @@ function onSuccess (data) {
   mapFilters.addEventListener('change', debounce(onMapFilterChange));
 }
 
-// function onError (dataError) {
-//   setAlertMessage('error');
-// }
-
 function onError () {
   setAlertMessage(ALLERT_MESSAGE);
 }

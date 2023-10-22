@@ -49,7 +49,7 @@ export function createPopup({offer, author}) {
 
   const popupFeatures = popupElement.querySelector('.popup__features');
   if(offer.features?.length) {
-    popupFeatures.textContent = offer.features.map((/*offer*/) => OFFER_FEATURES[offer]).join(', ');
+    popupFeatures.textContent = offer.features.map(() => OFFER_FEATURES[offer]).join(', ');
   }
 
   const popupDescription = popupElement.querySelector('.popup__description');

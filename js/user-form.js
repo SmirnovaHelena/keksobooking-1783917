@@ -37,6 +37,11 @@ const ROOM_TYPE_PRICE = {
   palace: '10000'
 };
 
+const MIN_LENGTH_TITLE = 30;
+const MAX_LENGTH_TITLE = 100;
+
+const MAX_VALUE_PRICE = 100000;
+
 const pristine = new Pristine(orderForm, {
   classTo: 'ad-form__element',
   errorClass: 'ad-form__element--invalid',
@@ -44,7 +49,7 @@ const pristine = new Pristine(orderForm, {
 }, true);
 
 function validateTitle (value) {
-  return value.length >= 30 && value.length <= 100;
+  return value.length >= MIN_LENGTH_TITLE && value.length <= MAX_LENGTH_TITLE;
 }
 
 pristine.addValidator(
@@ -54,7 +59,7 @@ pristine.addValidator(
 );
 
 function validatePrice (value) {
-  return value.length < 100000;
+  return value.length < MAX_VALUE_PRICE;
 }
 
 pristine.addValidator(
