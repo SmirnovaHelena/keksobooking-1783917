@@ -3,14 +3,14 @@ import './util.js';
 import {initMap , resetMap} from './map.js';
 
 import './slider.js';
-import {getFormStatus, getInactiveMapFilters, onUserFormSubmit, resettingForm, onResetClick } from './user-form.js';
+import {getFormStatus, toggleInactiveMapFilters, handleUserFormSubmit, resettingForm, runResetClick } from './user-form.js';
 
 import './message.js';
 
 initMap();
 
 getFormStatus();
-getInactiveMapFilters();
+toggleInactiveMapFilters();
 
-onUserFormSubmit(resettingForm, resetMap);
-onResetClick();
+handleUserFormSubmit(resettingForm, resetMap);
+runResetClick();

@@ -127,7 +127,7 @@ const getFormStatus = () => {
   formChangeStatus(orderForm);
 };
 
-const getInactiveMapFilters = () => {
+const toggleInactiveMapFilters = () => {
   mapFilters.classList.toggle('ad-form--disabled');
 
   formChangeStatus(mapFilters);
@@ -161,7 +161,7 @@ const resettingForm = () => {
   pristine.reset();
 };
 
-const onResetClick = () => {
+const runResetClick = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     resettingForm();
@@ -179,20 +179,20 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const onUserFormSubmit = (oneAction, twoAction) => {
+const handleUserFormSubmit = (runOneAction, runTwoAction) => {
   orderForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
       const formData = new FormData(evt.target);
       blockSubmitButton();
-      resetSlider();
       makeRequest(() => {
-        oneAction();
+        runOneAction();
+        resetSlider();
         getSuccessfulDownloaderForm();
         unblockSubmitButton();
       }, () => {
-        twoAction();
+        runTwoAction();
         getFailedDownloaderForm();
         unblockSubmitButton();
       },
@@ -202,4 +202,4 @@ const onUserFormSubmit = (oneAction, twoAction) => {
   });
 };
 
-export {getFormStatus, getInactiveMapFilters, onUserFormSubmit, resettingForm, onResetClick};
+export {getFormStatus, toggleInactiveMapFilters, handleUserFormSubmit, resettingForm, runResetClick};

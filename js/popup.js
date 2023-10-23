@@ -30,7 +30,7 @@ const createGalery = (container, photos) => {
   photoNode.remove();
 };
 
-export function createPopup({offer, author}) {
+export const createPopup = ({offer, author}) => {
   const popupElement = template.cloneNode(true);
 
   const popupTitle = popupElement.querySelector('.popup__title');
@@ -68,4 +68,4 @@ export function createPopup({offer, author}) {
     createGalery(galleryPopup, offer.photos);
   }
   return popupElement;
-}
+};

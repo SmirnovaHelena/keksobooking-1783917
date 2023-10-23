@@ -5,18 +5,25 @@ const body = document.querySelector('body');
 const patternSuccess = document.querySelector('#success').content.querySelector('.success');
 const patternFailed = document.querySelector('#error').content.querySelector('.error');
 
-const onSuccessMessageEscKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    body.removeChild(body.querySelector('.success'));
+const removeMessagePopup = () =>{
+  const messageElement = body.querySelector('.success');
+  if(messageElement) {
+    messageElement.remove();
   }
 };
 
-const onSuccessMessageClick = () => {
-  body.querySelector('.success').remove();
-  document.removeEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
-  document.removeEventListener('click', onSuccessMessageClick, { once: true });
+const onSuccessMessageEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    removeMessagePopup();
+    document.removeEventListener('click', onSuccessMessageClick, { once: true });
+  }
 };
+
+function onSuccessMessageClick () {
+  removeMessagePopup();
+  document.removeEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
+}
 
 const closeOpenSuccessMessage = () => {
   document.addEventListener('keydown', onSuccessMessageEscKeydown, { once: true });

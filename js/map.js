@@ -1,7 +1,7 @@
 import {createPopup} from './popup.js';
 
 import {filterData} from './sorting.js';
-import {getFormStatus, getInactiveMapFilters} from './user-form.js';
+import {getFormStatus, toggleInactiveMapFilters} from './user-form.js';
 import {makeRequest} from './api.js';
 import {setAlertMessage, debounce} from './util.js';
 
@@ -102,7 +102,11 @@ const initMap = () => {
   setAddressOnPinMove();
 };
 
-function resetMap () {
+const removePoints = () => {
+  pointLayer.clearLayers();
+};
+
+const resetMap = () => {
   map.closePopup();
   map.setView({
     lat: COORDINATE.lat,
@@ -116,29 +120,25 @@ function resetMap () {
   removePoints();
 
   setOfferPinMarker(options.slice(0, MAX_ELEMENT), createPopup);
-}
+};
 
-function removePoints () {
-  pointLayer.clearLayers();
-}
 
-function onMapFilterChange () {
+const onMapFilterChange = () => {
   removePoints();
 
   setOfferPinMarker(filterData(options), createPopup);
-}
+};
 
 function onSuccess (data) {
   options = data.slice();
-  // setAlertMessage('success');
-  getInactiveMapFilters();
+  toggleInactiveMapFilters();
   setOfferPinMarker(options.slice(0, MAX_ELEMENT), createPopup);
 
   mapFilters.addEventListener('change', debounce(onMapFilterChange));
 }
 
 function onError () {
-  setAlertMessage(ALLERT_MESSAGE);
+  setAlertMessage('error', ALLERT_MESSAGE);
 }
 
 resetButton.addEventListener('click', () => {
