@@ -1,7 +1,7 @@
 import {createPopup} from './popup.js';
 
 import {filterData} from './sorting.js';
-import {getFormStatus, toggleInactiveMapFilters} from './user-form.js';
+import {setFormStatus, toggleMapFiltersStatus} from './user-form.js';
 import {makeRequest} from './api.js';
 import {setAlertMessage, debounce} from './util.js';
 
@@ -23,7 +23,7 @@ const DEFAULT_ZOOM = 10;
 
 const map = L.map('map-canvas')
   .on('load', () => {
-    getFormStatus();
+    setFormStatus();
     makeRequest(onSuccess, onError, 'GET');
   }).setView({
     lat: COORDINATE.lat,
@@ -131,7 +131,7 @@ const onMapFilterChange = () => {
 
 function onSuccess (data) {
   options = data.slice();
-  toggleInactiveMapFilters();
+  toggleMapFiltersStatus();
   setOfferPinMarker(options.slice(0, MAX_ELEMENT), createPopup);
 
   mapFilters.addEventListener('change', debounce(onMapFilterChange));

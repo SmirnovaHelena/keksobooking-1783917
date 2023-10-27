@@ -16,18 +16,20 @@ const onSuccessMessageEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     removeMessagePopup();
-    document.removeEventListener('click', onSuccessMessageClick, { once: true });
+    document.removeEventListener('click', onSuccessMessageClick);
+    document.removeEventListener('keydown', onSuccessMessageEscKeydown);
   }
 };
 
 function onSuccessMessageClick () {
   removeMessagePopup();
-  document.removeEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
+  document.removeEventListener('keydown', onSuccessMessageEscKeydown);
+  document.removeEventListener('click', onSuccessMessageClick);
 }
 
 const closeOpenSuccessMessage = () => {
-  document.addEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
-  document.addEventListener('click', onSuccessMessageClick, { once: true });
+  document.addEventListener('keydown', onSuccessMessageEscKeydown);
+  document.addEventListener('click', onSuccessMessageClick);
 };
 
 const getSuccessfulDownloaderForm = () => {

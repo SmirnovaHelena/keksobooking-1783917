@@ -121,13 +121,13 @@ const formChangeStatus = (form) => {
   });
 };
 
-const getFormStatus = () => {
+const setFormStatus = () => {
   orderForm.classList.toggle('ad-form--disabled');
 
   formChangeStatus(orderForm);
 };
 
-const toggleInactiveMapFilters = () => {
+const toggleMapFiltersStatus = () => {
   mapFilters.classList.toggle('ad-form--disabled');
 
   formChangeStatus(mapFilters);
@@ -159,13 +159,13 @@ const resettingForm = () => {
   mapFilters.reset();
   price.placeholder = 0;
   pristine.reset();
+  resetImages();
 };
 
-const runResetClick = () => {
+const setResetClickListener = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     resettingForm();
-    resetImages();
   });
 };
 
@@ -179,7 +179,7 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const handleUserFormSubmit = (runOneAction, runTwoAction) => {
+const setUserFormSubmit = (onSuccess, onError) => {
   orderForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
@@ -187,12 +187,12 @@ const handleUserFormSubmit = (runOneAction, runTwoAction) => {
       const formData = new FormData(evt.target);
       blockSubmitButton();
       makeRequest(() => {
-        runOneAction();
+        onSuccess();
         resetSlider();
         getSuccessfulDownloaderForm();
         unblockSubmitButton();
       }, () => {
-        runTwoAction();
+        onError();
         getFailedDownloaderForm();
         unblockSubmitButton();
       },
@@ -202,4 +202,4 @@ const handleUserFormSubmit = (runOneAction, runTwoAction) => {
   });
 };
 
-export {getFormStatus, toggleInactiveMapFilters, handleUserFormSubmit, resettingForm, runResetClick};
+export {setFormStatus, toggleMapFiltersStatus, setUserFormSubmit, resettingForm, setResetClickListener};

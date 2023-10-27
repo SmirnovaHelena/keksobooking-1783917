@@ -3,14 +3,21 @@ import './util.js';
 import {initMap , resetMap} from './map.js';
 
 import './slider.js';
-import {getFormStatus, toggleInactiveMapFilters, handleUserFormSubmit, resettingForm, runResetClick } from './user-form.js';
+import {setFormStatus, toggleMapFiltersStatus, setUserFormSubmit, resettingForm, setResetClickListener } from './user-form.js';
 
 import './message.js';
 
 initMap();
 
-getFormStatus();
-toggleInactiveMapFilters();
+setFormStatus();
+toggleMapFiltersStatus();
+function onSuccessSubmitForm(){
+  resettingForm();
+  resetMap();
+}
+function onErrorSubmitForm(){
+  return 'Ошибка отправки объявления';
+}
 
-handleUserFormSubmit(resettingForm, resetMap);
-runResetClick();
+setUserFormSubmit(onSuccessSubmitForm, onErrorSubmitForm);
+setResetClickListener();
