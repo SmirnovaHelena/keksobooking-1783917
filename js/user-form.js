@@ -1,5 +1,7 @@
 import { makeRequest } from './api.js';
-import { getSuccessfulDownloorderForm, getFailedDownloorderForm } from './message.js';
+import { getSuccessfulDownloaderForm, getFailedDownloaderForm } from './message.js';
+import { resetSlider } from './slider.js';
+import { resetImages } from './avatar.js';
 
 const orderForm = document.querySelector('.ad-form');
 const capacityElement = orderForm.querySelector('#capacity');
@@ -35,6 +37,11 @@ const ROOM_TYPE_PRICE = {
   palace: '10000'
 };
 
+const MIN_LENGTH_TITLE = 30;
+const MAX_LENGTH_TITLE = 100;
+
+const MAX_VALUE_PRICE = 100000;
+
 const pristine = new Pristine(orderForm, {
   classTo: 'ad-form__element',
   errorClass: 'ad-form__element--invalid',
@@ -42,7 +49,7 @@ const pristine = new Pristine(orderForm, {
 }, true);
 
 function validateTitle (value) {
-  return value.length >= 30 && value.length <= 100;
+  return value.length >= MIN_LENGTH_TITLE && value.length <= MAX_LENGTH_TITLE;
 }
 
 pristine.addValidator(
@@ -52,7 +59,7 @@ pristine.addValidator(
 );
 
 function validatePrice (value) {
-  return value.length > 100000;
+  return value.length < MAX_VALUE_PRICE;
 }
 
 pristine.addValidator(
@@ -61,13 +68,13 @@ pristine.addValidator(
   'Не более 100 000'
 );
 
-const capacityCheck = () => ROOMS_TO_GUESTS[rooms.value].includes(capacityElement.value);
+const checkCapacity = () => ROOMS_TO_GUESTS[rooms.value].includes(capacityElement.value);
 
 const getСapacityElementErrorMessage = () => `Для такого количества гостей подойдёт ${GUESTS_TO_ROOMS[capacityElement.value].join(' или ')}`;
 
 pristine.addValidator(
   capacityElement,
-  capacityCheck,
+  checkCapacity,
   getСapacityElementErrorMessage
 );
 
@@ -80,7 +87,7 @@ const getRoomElementErrorMessage = () => {
 
 pristine.addValidator(
   rooms,
-  capacityCheck,
+  checkCapacity,
   getRoomElementErrorMessage
 );
 
@@ -100,6 +107,7 @@ capacityElement.addEventListener('change', onGuestsNumberChange);
 const onTimeInChange = () => {
   timeOut.value = timeIn.value;
 };
+
 const onTimeOutChange = () => {
   timeIn.value = timeOut.value;
 };
@@ -107,7 +115,25 @@ const onTimeOutChange = () => {
 timeIn.addEventListener('change', onTimeInChange);
 timeOut.addEventListener('change', onTimeOutChange);
 
-const priceCheck = (value) => Number.parseInt(value, 10) >= ROOM_TYPE_PRICE[typeOfHousing.value];
+const formChangeStatus = (form) => {
+  form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
+    fieldItem.disabled = !fieldItem.disabled;
+  });
+};
+
+const setFormStatus = () => {
+  orderForm.classList.toggle('ad-form--disabled');
+
+  formChangeStatus(orderForm);
+};
+
+const toggleMapFiltersStatus = () => {
+  mapFilters.classList.toggle('ad-form--disabled');
+
+  formChangeStatus(mapFilters);
+};
+
+const priceCheck = (value) => Number.parseInt(value, 10) >= ROOM_TYPE_PRICE[typeOfHousing.value];orderForm.reset();
 
 const getPriceErrorMessage = () => `Стоимость должна быть выше ${ROOM_TYPE_PRICE[typeOfHousing.value]}`;
 
@@ -122,20 +148,21 @@ const onPriceCheck = () => pristine.validate(price);
 price.addEventListener('change', onPriceCheck);
 typeOfHousing.addEventListener('change', onPriceCheck);
 
-const ontypeOfHousingChange = () => {
+const onTypeOfHousingChange = () => {
   price.placeholder = ROOM_TYPE_PRICE[typeOfHousing.value];
 };
 
-typeOfHousing.addEventListener('change', ontypeOfHousingChange);
+typeOfHousing.addEventListener('change', onTypeOfHousingChange);
 
 const resettingForm = () => {
   orderForm.reset();
   mapFilters.reset();
   price.placeholder = 0;
   pristine.reset();
+  resetImages();
 };
 
-const onResetClick = () => {
+const setResetClickListener = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     resettingForm();
@@ -152,36 +179,27 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const onUserFormSubmit = (oneAction, twoAction) => {
+const setUserFormSubmit = (onSuccess, onError) => {
   orderForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
       const formData = new FormData(evt.target);
       blockSubmitButton();
-      /*eslint brace-style: ["error", "1tbs", { "allowSingleLine": true }]*/
-      makeRequest(() => { oneAction(); twoAction(); getSuccessfulDownloorderForm(); unblockSubmitButton(); }, () => {
-        getFailedDownloorderForm(); unblockSubmitButton();
-      }, 'POST', formData);
+      makeRequest(() => {
+        onSuccess();
+        resetSlider();
+        getSuccessfulDownloaderForm();
+        unblockSubmitButton();
+      }, () => {
+        onError();
+        getFailedDownloaderForm();
+        unblockSubmitButton();
+      },
+      'POST',
+      formData);
     }
   });
 };
 
-const formChangeStatus = (form) => {
-  form.querySelectorAll('fieldset, select.map__filter').forEach((fieldItem) => {
-    fieldItem.disabled = !fieldItem.disabled;
-  });
-};
-
-const formStatus = () => {
-  orderForm.classList.toggle('ad-form--disabled');
-
-  formChangeStatus(orderForm);
-};
-
-const inactiveMapFilters = () => {
-  mapFilters.classList.toggle('ad-form--disabled');
-  formChangeStatus(mapFilters);
-};
-
-export {formStatus, inactiveMapFilters, onUserFormSubmit, resettingForm, onResetClick};
+export {setFormStatus, toggleMapFiltersStatus, setUserFormSubmit, resettingForm, setResetClickListener};

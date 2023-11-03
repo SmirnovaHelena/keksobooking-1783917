@@ -1,16 +1,23 @@
 import './util.js';
 
-import {getSimilarAd} from './data.js';
-import {mapInit} from './map.js';
+import {initMap , resetMap} from './map.js';
 
-// eslint-disable-next-line no-unused-vars
 import './slider.js';
-// eslint-disable-next-line no-unused-vars
-import { formStatus, inactiveMapFilters, onUserFormSubmit, resettingForm, onResetClick } from './user_form.js';
+import {setFormStatus, toggleMapFiltersStatus, setUserFormSubmit, resettingForm, setResetClickListener } from './user-form.js';
 
-/* eslint-disable no-console */
-const offersArray = Array.from({ length: 10 }, getSimilarAd);
-mapInit(offersArray);
+import './message.js';
 
-onUserFormSubmit(resettingForm);
-onResetClick();
+initMap();
+
+setFormStatus();
+toggleMapFiltersStatus();
+function onSuccessSubmitForm(){
+  resettingForm();
+  resetMap();
+}
+function onErrorSubmitForm(){
+  return 'Ошибка отправки объявления';
+}
+
+setUserFormSubmit(onSuccessSubmitForm, onErrorSubmitForm);
+setResetClickListener();

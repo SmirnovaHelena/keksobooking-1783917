@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 import { printNumerals } from './util.js';
 
 const templateFragment = document.querySelector('#card').content;
@@ -31,7 +30,7 @@ const createGalery = (container, photos) => {
   photoNode.remove();
 };
 
-export function createPopup({offer, author}) {
+export const createPopup = ({offer, author}) => {
   const popupElement = template.cloneNode(true);
 
   const popupTitle = popupElement.querySelector('.popup__title');
@@ -49,8 +48,8 @@ export function createPopup({offer, author}) {
   popupCheckInOut.textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
   const popupFeatures = popupElement.querySelector('.popup__features');
-  if(offer.features.length) {
-    popupFeatures.textContent = offer.features.map((offer) => OFFER_FEATURES[offer]).join(', ');
+  if(offer.features?.length) {
+    popupFeatures.textContent = offer.features.map(() => OFFER_FEATURES[offer]).join(', ');
   }
 
   const popupDescription = popupElement.querySelector('.popup__description');
@@ -65,7 +64,8 @@ export function createPopup({offer, author}) {
   autorAvatar.src = author.avatar;
 
   const galleryPopup = popupElement.querySelector('.popup__photos');
-  createGalery(galleryPopup, offer.photos);
-
+  if (offer.photos) {
+    createGalery(galleryPopup, offer.photos);
+  }
   return popupElement;
-}
+};

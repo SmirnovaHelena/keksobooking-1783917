@@ -1,34 +1,45 @@
-import { escapeKey, enterKey } from './util.js';
+import { isEscapeKey, isEnterKey } from './util.js';
 
 const body = document.querySelector('body');
 
 const patternSuccess = document.querySelector('#success').content.querySelector('.success');
 const patternFailed = document.querySelector('#error').content.querySelector('.error');
 
-const onSuccessMessageEscKeydown = (evt) => {
-  if (escapeKey(evt)) {
-    evt.preventDefault();
-    body.removeChild(body.querySelector('.success'));
+const removeMessagePopup = () =>{
+  const messageElement = body.querySelector('.success');
+  if(messageElement) {
+    messageElement.remove();
   }
 };
 
-const onSuccessMessageClick = () => {
-  body.removeChild(body.querySelector('.success'));
+const onSuccessMessageEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    removeMessagePopup();
+    document.removeEventListener('click', onSuccessMessageClick);
+    document.removeEventListener('keydown', onSuccessMessageEscKeydown);
+  }
 };
+
+function onSuccessMessageClick () {
+  removeMessagePopup();
+  document.removeEventListener('keydown', onSuccessMessageEscKeydown);
+  document.removeEventListener('click', onSuccessMessageClick);
+}
 
 const closeOpenSuccessMessage = () => {
-  document.addEventListener('keydown', onSuccessMessageEscKeydown, { once: true });
-  document.addEventListener('click', onSuccessMessageClick, { once: true });
+  document.addEventListener('keydown', onSuccessMessageEscKeydown);
+  document.addEventListener('click', onSuccessMessageClick);
 };
 
-const getSuccessfulDownloorderForm = () => {
+const getSuccessfulDownloaderForm = () => {
   const ticetElement = patternSuccess.cloneNode(true);
   body.append(ticetElement);
   closeOpenSuccessMessage();
 };
 
 const onFailedMessageEscKeydown = (evt) => {
-  if (escapeKey(evt)) {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
     body.removeChild(body.querySelector('.error'));
   }
@@ -39,7 +50,7 @@ const onFailedMessageClick = () => {
 };
 
 const onFailedMessageEnterKeydown = (evt) => {
-  if (enterKey(evt)) {
+  if (isEnterKey(evt)) {
     evt.preventDefault();
     body.removeChild(body.querySelector('.error'));
   }
@@ -51,10 +62,10 @@ const closeOpenFailedMessage = (buttonErrorForm) => {
   buttonErrorForm.addEventListener('keydown', onFailedMessageEnterKeydown, { once: true });
 };
 
-const getFailedDownloorderForm = () => {
+const getFailedDownloaderForm = () => {
   const ticetElement = patternFailed.cloneNode(true);
   body.append(ticetElement);
   closeOpenFailedMessage(document.querySelector('.error__button'));
 };
 
-export {getSuccessfulDownloorderForm, getFailedDownloorderForm};
+export {getSuccessfulDownloaderForm, getFailedDownloaderForm};

@@ -11,12 +11,12 @@ const makeRequest = (onSuccess, onFail, method, readyData) => {
       body: readyData,
     },
   )
-    .then((response) => response.json())
+    .then((response) => response.ok ? response.json() : response.text().then((data) => Promise.reject(data)))
     .then((data) => {
       onSuccess(data);
     })
-    .catch(() => {
-      onFail();
+    .catch((error) => {
+      onFail(error);
     });
 };
 

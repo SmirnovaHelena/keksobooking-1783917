@@ -1,18 +1,33 @@
 import {createPopup} from './popup.js';
 
+import {filterData} from './sorting.js';
+import {setFormStatus, toggleMapFiltersStatus} from './user-form.js';
+import {makeRequest} from './api.js';
+import {setAlertMessage, debounce} from './util.js';
+
 const addressElement = document.querySelector('#address');
 
-const START_COORDINATE = {
-  startLat: 35.683171,
-  startLng: 139.753143
+const resetButton = document.querySelector('.ad-form__reset');
+const mapFilters = document.querySelector('.map__filters');
+
+const ALLERT_MESSAGE = 'Не удалось загрузить данные, повторите попытку.';
+const MAX_ELEMENT = 10;
+let options = [];
+
+const COORDINATE = {
+  lat: 35.683171,
+  lng: 139.753143
 };
 
 const DEFAULT_ZOOM = 10;
 
 const map = L.map('map-canvas')
-  .setView({
-    lat: START_COORDINATE.startLat,
-    lng: START_COORDINATE.startLng
+  .on('load', () => {
+    setFormStatus();
+    makeRequest(onSuccess, onError, 'GET');
+  }).setView({
+    lat: COORDINATE.lat,
+    lng: COORDINATE.lng,
   }, DEFAULT_ZOOM);
 
 L.tileLayer(
@@ -22,6 +37,8 @@ L.tileLayer(
   },
 ).addTo(map);
 
+const pointLayer = L.layerGroup().addTo(map);
+
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
@@ -30,8 +47,8 @@ const mainPinIcon = L.icon({
 
 const mainPinMarker = L.marker(
   {
-    lat: START_COORDINATE.startLat,
-    lng: START_COORDINATE.startLng,
+    lat: COORDINATE.lat,
+    lng: COORDINATE.lng,
   },
   {
     draggable: true,
@@ -51,17 +68,17 @@ const setMainPinMarker = () => mainPinMarker.addTo(map);
 
 const setStartAddress = () => {
   const { lat, lng } = mainPinMarker.getLatLng();
-  addressElement.value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  addressElement.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
 
 const setAddressOnPinMove = () => {
   mainPinMarker.on('move', (evt) => {
     const { lat, lng } = evt.target.getLatLng();
-    addressElement.value = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+    addressElement.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
   });
 };
 
-const setOfferPinMarker = (offers) => {
+const setOfferPinMarker = (offers, cb) => {
   offers.forEach((offer) => {
     const offerMarker = L.marker(
       {
@@ -72,29 +89,60 @@ const setOfferPinMarker = (offers) => {
         icon,
       }
     );
-    offerMarker.addTo(map).bindPopup(createPopup(offer));
+
+    offerMarker.addTo(pointLayer).bindPopup(cb(offer));
   });
 };
 
 const setOnMapLoad = (cb) => map.on('load', cb);
 
-const mapInit = (offersData) => {
+const initMap = () => {
   setStartAddress();
-  setOfferPinMarker(offersData);
   setMainPinMarker();
   setAddressOnPinMove();
+};
+
+const removePoints = () => {
+  pointLayer.clearLayers();
 };
 
 const resetMap = () => {
   map.closePopup();
   map.setView({
-    lat: START_COORDINATE.startLat,
-    lng: START_COORDINATE.startLng
+    lat: COORDINATE.lat,
+    lng: COORDINATE.lng
   }, DEFAULT_ZOOM);
   mainPinMarker.setLatLng({
-    lat: START_COORDINATE.startLat,
-    lng: START_COORDINATE.startLng
+    lat: COORDINATE.lat,
+    lng: COORDINATE.lng
   });
+
+  removePoints();
+
+  setOfferPinMarker(options.slice(0, MAX_ELEMENT), createPopup);
 };
 
-export { mapInit, setStartAddress, setOnMapLoad, setMainPinMarker, setOfferPinMarker, resetMap };
+
+const onMapFilterChange = () => {
+  removePoints();
+
+  setOfferPinMarker(filterData(options), createPopup);
+};
+
+function onSuccess (data) {
+  options = data.slice();
+  toggleMapFiltersStatus();
+  setOfferPinMarker(options.slice(0, MAX_ELEMENT), createPopup);
+
+  mapFilters.addEventListener('change', debounce(onMapFilterChange));
+}
+
+function onError () {
+  setAlertMessage('error', ALLERT_MESSAGE);
+}
+
+resetButton.addEventListener('click', () => {
+  resetMap();
+});
+
+export { initMap, setStartAddress, setOnMapLoad, setMainPinMarker, setOfferPinMarker, resetMap };
